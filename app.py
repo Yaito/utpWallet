@@ -20,77 +20,100 @@ except mysql.connector.Error as e:
     else:
         print(e)
 
-
-
 # TEST GUI Request Variables
 test_id = 1                       #TESTING VARIABLE: DECIDE WHO PASS THE CARD
-topup_credit = 5.00               #TESTING VARIABLE: CREDIT
-payment_debit = 2.00              #TESTING VARIABLE: DEBIT
+topup_credit = 1235.75               #TESTING VARIABLE: CREDIT
+payment_debit = 1000.00            #TESTING VARIABLE: DEBIT
 
-# Filling Instance
-handler = GET(test_id)
-user_account = model.Card(
-    handler[0],
-    handler[1],
-    handler[2],
-    handler[3],
-    handler[4],
-    handler[5],
-    handler[6])
-# print (user_account.first_name)
-# print(handler)
-
-
-#Account Information Extraction
-def GET(card_id):
+# Account Validation
+def acc_validation(test_id):
     cursor = cnn.cursor()
-    query = ('''SELECT acc_id,first_name,last_name,personal_id,acc_fac,b.career,acc_balance 
-                    FROM usr_acc as a join career as b on a.acc_career = b.career_ID 
-                    WHERE acc_id = %s''')
-    cursor.execute(query,(card_id,))
-    data=cursor.fetchone()
-    cnn.commit() 
-    cursor.close()
-    return data
+    query = ('''SELECT acc_id FROM usr_acc WHERE acc_id = %s''')
+    cursor.execute(query,(test_id,))
+    val=cursor.fetchone()
+    if val is not None:
+        return True
+    else:
+        return False
+# print(acc_validation(get_acc(test_id)))
+
+# Account Enough Balance Validation
+def balance_check(acc_owner,d_amount):
+    cursor = cnn.cursor()
+    query = ('''SELECT acc_balance FROM usr_acc WHERE acc_id = %s''')
+    cursor.execute(query,(acc_owner.account_ID,))
+    current_bal=cursor.fetchone()
+    current_bal=current_bal[0]
+    if(current_bal<d_amount):
+        return False
+    elif(current_bal > d_amount or current_bal == d_amount):
+        return True
+    
+# Get account information for transaction
+def get_acc(card_id):
+    if (acc_validation(card_id)) == True:
+        cursor = cnn.cursor()
+        query = ('''SELECT acc_id,first_name,last_name,personal_id,acc_fac,b.career,acc_balance 
+                        FROM usr_acc as a join career as b on a.acc_career = b.career_ID 
+                        WHERE acc_id = %s''')
+        cursor.execute(query,(card_id,))
+        access_acc=cursor.fetchone()
+        acc_info = model.Card(access_acc[0],access_acc[1],access_acc[2],access_acc[3],access_acc[4],access_acc[5],access_acc[6])
+        cnn.commit() 
+        cursor.close()
+        return acc_info
+    else:
+        # print ("Account Error: Doesn't Exist")
+        return False
+# print(get_acc(test_id))
 
 #Discount on account balance function
 def Payment(account,debit):
-    cursor = cnn.cursor()
-    query1= ('''INSERT INTO trx VALUES(NULL,%s,1,NOW(),%s,0.00)''')
-    cursor.execute(query1,(account.account_ID,debit,))
-    cnn.commit() 
-    
-    new_balance = (float(account.current_balance) - debit)
-    cursor = cnn.cursor()
-    query2= ('''UPDATE usr_acc SET acc_balance=%s WHERE acc_id=%s''')
-    cursor.execute(query2,(new_balance,account.account_ID,))
-    cnn.commit()
-    cursor.close()
-    return 0
+    if(balance_check(account,debit)) == True:
+        cursor = cnn.cursor()
+        query1= ('''INSERT INTO trx VALUES(NULL,%s,1,NOW(),%s,0.00)''')
+        cursor.execute(query1,(account.account_ID,debit,))
+        cnn.commit() 
+        
+        new_balance = (float(account.current_balance) - debit)
+        cursor = cnn.cursor()
+        query2= ('''UPDATE usr_acc SET acc_balance=%s WHERE acc_id=%s''')
+        cursor.execute(query2,(new_balance,account.account_ID,))
+        cnn.commit()
+        cursor.close()
+        return print("Payment Transaction Successfully Done\n ${0:.2f} deducted from your account".format(debit))
+    else:
+        return print("Payment Error: Not Enough Money")
 
 #Topup on account balance function
 def Topup(account,credit):
-    cursor = cnn.cursor()
-    query1= ('''INSERT INTO trx VALUES(NULL,%s,2,NOW(),0.00,%s)''')
-    cursor.execute(query1,(account.account_ID,credit,))
-    cnn.commit() 
-    
-    new_balance = (float(account.current_balance) + credit)
-    cursor = cnn.cursor()
-    query2= ('''UPDATE usr_acc SET acc_balance=%s WHERE acc_id=%s''')
-    cursor.execute(query2,(new_balance,account.account_ID,))
-    cnn.commit()
-    cursor.close()
-    return 0
+    if(account != False):
+        cursor = cnn.cursor()
+        query1= ('''INSERT INTO trx VALUES(NULL,%s,2,NOW(),0.00,%s)''')
+        cursor.execute(query1,(account.account_ID,credit,))
+        cnn.commit() 
+        
+        new_balance = (float(account.current_balance) + credit)
+        cursor = cnn.cursor()
+        query2= ('''UPDATE usr_acc SET acc_balance=%s WHERE acc_id=%s''')
+        cursor.execute(query2,(new_balance,account.account_ID,))
+        cnn.commit()
+        cursor.close()
+        return print("Top-up Transaction Successfully Done\n ${0:.2f} added to your account".format(credit))
+    else:
+        return print("Top-up Error: Account Doesn't Exist.")
 
 #Identification Extraction
 def showInfo(account):
-    name = account.first_name
-    fam_name = account.last_name
-    fac = account.faculty
-    career = account.career
-    return print("Name: "+name+" "+fam_name+"\nFaculty: "+fac+"\nCareer: "+career)
+    if(account != False):
+        name = account.first_name
+        fam_name = account.last_name
+        fac = account.faculty
+        career = account.career
+        return print("Name: "+name+" "+fam_name+"\nFaculty: "+fac+"\nCareer: "+career)
+    else:
+        return print("Indentification Error: Account not in database")
 
-# Topup(user_account,topup_credit)
-# Payment(user_account,payment_debit)
-# showInfo(user_account)
+# Topup(get_acc(test_id),topup_credit)
+# Payment(get_acc(test_id),payment_debit)
+# showInfo(get_acc(test_id))
