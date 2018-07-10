@@ -7,7 +7,19 @@ class Card(object):
         self.faculty = faculty
         self.career = career
         self.current_balance = balance
-        
+
+class User(object):
+    user_type = ""
+
+    def __init__(self,usr,pword):
+        self.username = usr
+        self.password = pword
+    
+    def isValid(self):
+        if(self.username != Null):
+            if(self.password != Null):
+                return True
+        return False
 # Testing model
 # card_one = Card(5,'luis','yao','22-2232-23','fisc','sistema','223.23')
 # card_one.first_name = 'roderick'
