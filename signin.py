@@ -46,7 +46,6 @@ class Ui_MainWindow(object):
                 print("Type 3 - Security")
         else:
             infoBox = QMessageBox()
-            print("Im here")
             infoBox.setIcon(QMessageBox.Critical)
             infoBox.setText("Error")
             infoBox.setInformativeText("Log-in Error")

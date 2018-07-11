@@ -119,21 +119,9 @@ def authenticate(log_account):
 def sign_in(input_user, input_pass):
     operator = model.User(input_user, input_pass)
     current_user = authenticate(operator)
-    if current_user is not False:
-        if(current_user.type == 1):
-            ####
-            print("SYSTEM INFO: Successfully Logged in")
-            print("Type 1 - Admin")
-        elif(current_user.type == 2):
-            ###
-            print("SYSTEM INFO: Successfully Logged in")
-            print("Type 2 - Cashier")
-        elif(current_user.type == 3):
-            ###
-            print("SYSTEM INFO: Successfully Logged in")
-            print("Type 3 - Security")
-    else:
-        print("SYSTEM INFO: Error - Username or Password doesnt't match or doesn't Exist")
+
+    return current_user
+        # print("SYSTEM INFO: Error - Username or Password doesnt't match or doesn't Exist")
 
 # Adding operative user
 def new_user(n_username,n_password,type):
@@ -142,7 +130,8 @@ def new_user(n_username,n_password,type):
     cursor.execute(query, (n_username,))
     val = cursor.fetchone()
     if val is not None:
-        return print("SYSTEM ERROR: Username already exist")
+        # return print("SYSTEM ERROR: Username already exist")
+        return False
     else:
         new_usr = model.User(n_username,n_password)
         new_usr.user_type = type
@@ -151,7 +140,7 @@ def new_user(n_username,n_password,type):
         cursor.execute(query1, (new_usr.username, new_usr.password,new_usr.user_type,))
         cnn.commit()
         print("SYSTEM INFO: New user created successfully")
-        return 0
+        return True
         
 # Deleting operative user
 def del_user(ex_usr_id):
