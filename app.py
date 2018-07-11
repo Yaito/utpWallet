@@ -25,20 +25,31 @@ test_id = 1  # TESTING VARIABLE: DECIDE WHO PASS THE CARD
 topup_credit = 1235.75  # TESTING VARIABLE: CREDIT
 payment_debit = 1000.00  # TESTING VARIABLE: DEBIT
 
-test_usr = "chombi1234"  # TESTING OPERATIVE USER
+test_usr_id = 10
+test_usr = "chombita123"  # TESTING OPERATIVE USER
 test_pass = "1234"  # TESTING OPERATIVE PASSWORD
+test_type = 2
 
 # Account Validation
-def acc_validation(test_id):
+def acc_validation(card_ID):
     cursor = cnn.cursor()
     query = ('''SELECT acc_id FROM usr_acc WHERE acc_id = %s''')
-    cursor.execute(query, (test_id,))
+    cursor.execute(query, (card_ID,))
     val = cursor.fetchone()
     if val is not None:
         return True
     else:
         return False
-# print(acc_validation(get_acc(test_id)))
+# Operative User Validation
+def usr_validation(card_ID):
+    cursor = cnn.cursor()
+    query = ('''SELECT user_ID FROM user WHERE user_ID = %s''')
+    cursor.execute(query, (card_ID,))
+    val = cursor.fetchone()
+    if val is not None:
+        return True
+    else:
+        return False
 
 # Account Enough Balance Validation
 def balance_check(acc_owner, d_amount):
@@ -69,7 +80,6 @@ def get_acc(card_id):
     else:
         # print ("Account Error: Doesn't Exist")
         return False
-# print(get_acc(test_id))
 
 # Operative User Authentification (Background Process)
 def authenticate(log_account):
@@ -109,14 +119,45 @@ def sign_in(input_user, input_pass):
         elif(current_user.type == 2):
             ###
             print("SYSTEM INFO: Successfully Logged in")
-            print("Type 2 - Admin")
+            print("Type 2 - Cashier")
         elif(current_user.type == 3):
             ###
             print("SYSTEM INFO: Successfully Logged in")
-            print("Type 3 - Admin")
+            print("Type 3 - Security")
     else:
         print("SYSTEM INFO: Error - Username or Password doesnt't match or doesn't Exist")
 
+# Adding operative user
+def new_user(n_username,n_password,type):
+    cursor = cnn.cursor()
+    query = ('''SELECT * FROM user WHERE username = %s''')
+    cursor.execute(query, (n_username,))
+    val = cursor.fetchone()
+    if val is not None:
+        return print("SYSTEM ERROR: Usersame already exist")
+    else:
+        new_acc = model.User(n_username,n_password)
+        new_acc.user_type = type
+        cursor = cnn.cursor()
+        query1 = ('''INSERT INTO user VALUES(NULL,%s,%s,%s)''')
+        cursor.execute(query1, (new_acc.username, new_acc.password,new_acc.user_type,))
+        cnn.commit()
+        print("SYSTEM INFO: New user created successfully")
+        return 0
+        
+# Deleting operative user
+def del_user(ex_card_id):
+    if (usr_validation(ex_card_id)) == True:
+        cursor = cnn.cursor()
+        query = ('''DELETE FROM user WHERE user_ID = %s''')
+        cursor.execute(query, (ex_card_id,))
+        cnn.commit()
+        cursor.close()
+        print("SYSTEM INFO: User with ID",ex_card_id,"deleted successfully")
+    else:
+        print("SYSTEM ERROR: User doesn't exist")
+    return 0
+        
 
 # Discount on account balance function
 def Payment(account, debit):
@@ -161,7 +202,7 @@ def showInfo(account):
         fam_name = account.last_name
         fac = account.faculty
         career = account.career
-        return print("Name: "+name+" "+fam_name+"\nFaculty: "+fac+"\nCareer: "+career)
+        return account
     else:
         return print("Indentification Error: Account not in database")
 
@@ -169,4 +210,6 @@ def showInfo(account):
 # Topup(get_acc(test_id),topup_credit)
 # Payment(get_acc(test_id),payment_debit)
 # showInfo(get_acc(test_id))
-sign_in(test_usr, test_pass)
+# sign_in(test_usr, test_pass)
+# new_user(test_usr,test_pass,test_type)
+del_user(test_usr_id)
