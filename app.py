@@ -247,8 +247,8 @@ def showInfo(account):
         career = account.career
         return account
     else:
-        return print("Indentification Error: Account not in database")
-
+        # return print("Indentification Error: Account not in database")
+        return False
 
 # Topup(get_acc(test_id),topup_credit)
 # Payment(get_acc(test_id),payment_debit)
