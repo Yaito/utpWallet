@@ -19,12 +19,6 @@ Desarrollado en Python 3 (Anaconda) para el Backend, MySQL Community + MySQL Wor
 
 <!-- ![Image](https://github.com/miguel3010/proyectoSimulacion/blob/master/Screenshot-2017-10-28%20Estad%C3%ADsticas.png) -->
 
--Build in Progress-
-
-### Prerequisites / Prerequisitos
-
--Build in Progress-
-
 ## Built With / Softwares used
 * [Anaconda - Python3](https://www.anaconda.com/) - Backend
 * [PyQt from Anaconda](https://riverbankcomputing.com/software/pyqt/intro/) - Python GUI Module
@@ -43,3 +37,4 @@ Desarrollado en Python 3 (Anaconda) para el Backend, MySQL Community + MySQL Wor
 ## Acknowledgments / Agradecimientos
 
 * PhD Javier Sánchez Gavilan -Professor-
+* Omar Mejía -Student-
