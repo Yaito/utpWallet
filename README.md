@@ -11,13 +11,13 @@ Sistema de Transacción Interno Institucional - utpWallet (*Nombre Provisional)
 Desarrollado en Python 3 (Anaconda) para el Backend, MySQL Community + MySQL WorkBench para Manejo de Base de Datos, PyQt para el diseño de la Interfaz Gráfica.
 
 ## ScreenShots / Capturas
-<!-- ![Image](https://github.com/miguel3010/proyectoSimulacion/blob/master/Screenshot-2017-10-28%20Presentaci%C3%B3n.png) -->
+![Image](https://github.com/Yaito/utpWallet/blob/master/IMG_SignIn.png)
 
-<!-- ![Image](https://github.com/miguel3010/proyectoSimulacion/blob/master/Screenshot-2017-10-28%20Simulaci%C3%B3n.png) -->
+![Image](https://github.com/Yaito/utpWallet/blob/master/IMG_Admin%20View.png)
 
-<!-- ![Image](https://github.com/miguel3010/proyectoSimulacion/blob/master/Screenshot-2017-10-28%20Simulaci%C3%B3n2.png) -->
+![Image](https://github.com/Yaito/utpWallet/blob/master/IMG_Showup.png)
 
-<!-- ![Image](https://github.com/miguel3010/proyectoSimulacion/blob/master/Screenshot-2017-10-28%20Estad%C3%ADsticas.png) -->
+![Image](https://github.com/Yaito/utpWallet/blob/master/IMG_Transaction.png)
 
 ## Built With / Softwares used
 * [Anaconda - Python3](https://www.anaconda.com/) - Backend
