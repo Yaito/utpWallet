@@ -28,7 +28,15 @@ payment_debit = 1000.00  # TESTING VARIABLE: DEBIT
 test_usr_id = 10
 test_usr = "chombita123"  # TESTING OPERATIVE USER
 test_pass = "1234"  # TESTING OPERATIVE PASSWORD
-test_type = 2
+
+test_card_id = 6      # TESTING deleting card account id
+test_fname = "Rosalina"       # TESTING first NAME
+test_lname = "Mcpearson"       # TESTING last NAME
+test_pid = "4-234-1234"       # TESTING personal ID 
+test_fac = "FIC"       # TESTING faculty ID 
+test_career = 2       # TESTING career code 
+test_balance = 0.00       # TESTING initial balance 
+
 
 # Account Validation
 def acc_validation(card_ID):
@@ -134,28 +142,63 @@ def new_user(n_username,n_password,type):
     cursor.execute(query, (n_username,))
     val = cursor.fetchone()
     if val is not None:
-        return print("SYSTEM ERROR: Usersame already exist")
+        return print("SYSTEM ERROR: Username already exist")
     else:
-        new_acc = model.User(n_username,n_password)
-        new_acc.user_type = type
+        new_usr = model.User(n_username,n_password)
+        new_usr.user_type = type
         cursor = cnn.cursor()
         query1 = ('''INSERT INTO user VALUES(NULL,%s,%s,%s)''')
-        cursor.execute(query1, (new_acc.username, new_acc.password,new_acc.user_type,))
+        cursor.execute(query1, (new_usr.username, new_usr.password,new_usr.user_type,))
         cnn.commit()
         print("SYSTEM INFO: New user created successfully")
         return 0
         
 # Deleting operative user
-def del_user(ex_card_id):
-    if (usr_validation(ex_card_id)) == True:
+def del_user(ex_usr_id):
+    if (usr_validation(ex_usr_id)) == True:
         cursor = cnn.cursor()
-        query = ('''DELETE FROM user WHERE user_ID = %s''')
+        query = ('''DELETE FROM user WHERE user_id = %s''')
+        cursor.execute(query, (ex_usr_id,))
+        cnn.commit()
+        cursor.close()
+        print("SYSTEM INFO: User with ID",ex_usr_id,"deleted successfully")
+    else:
+        print("SYSTEM ERROR: User doesn't exist")
+    return 0
+
+# Adding Card Accounts
+def new_card(n_fname,n_lname,n_pid,n_acc_fac,n_acc_career,n_acc_balance):
+    cursor = cnn.cursor()
+    query = ('''SELECT * FROM usr_acc WHERE personal_id = %s''')
+    cursor.execute(query, (n_pid,))
+    val = cursor.fetchone()
+    if val is not None:
+        return print("SYSTEM ERROR: Account already exist")
+    else:
+        new_acc = model.Card(0,n_fname,n_lname,n_pid,n_acc_fac,n_acc_career,n_acc_balance)
+        cursor = cnn.cursor()
+        query1 = ('''INSERT INTO usr_acc VALUES(NULL,%s,%s,%s,%s,%s,%s)''')
+        cursor.execute(query1, (new_acc.first_name,
+                                new_acc.last_name,
+                                new_acc.personal_ID,
+                                new_acc.faculty, 
+                                new_acc.career,
+                                new_acc.current_balance,))
+        cnn.commit()
+        print("SYSTEM INFO: New Card Account created successfully")
+        return 0
+        
+# Deleting Card Accounts
+def del_card(ex_card_id):
+    if (acc_validation(ex_card_id)) == True:
+        cursor = cnn.cursor()
+        query = ('''DELETE FROM usr_acc WHERE acc_ID = %s''')
         cursor.execute(query, (ex_card_id,))
         cnn.commit()
         cursor.close()
-        print("SYSTEM INFO: User with ID",ex_card_id,"deleted successfully")
+        print("SYSTEM INFO: Card Account with ID",ex_card_id,"deleted successfully")
     else:
-        print("SYSTEM ERROR: User doesn't exist")
+        print("SYSTEM ERROR: Card Account doesn't exist")
     return 0
         
 
@@ -212,4 +255,6 @@ def showInfo(account):
 # showInfo(get_acc(test_id))
 # sign_in(test_usr, test_pass)
 # new_user(test_usr,test_pass,test_type)
-del_user(test_usr_id)
+# del_user(test_usr_id)
+# new_card(test_fname,test_lname,test_pid,test_fac,test_career,test_balance)
+# del_card(test_card_id)
