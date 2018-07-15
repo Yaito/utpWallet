@@ -229,14 +229,14 @@ def showInfo(account):
 
 def dataAnalysis():
     cursor = cnn.cursor()
-    myFrames = pd.read_sql_query('''SELECT * FROM trx''', cnn)
+    myFrames = pd.read_sql_query('''SELECT date,sum(debit) as debit,sum(credit) as credit FROM trx GROUP BY date''', cnn)
     S_date = pd.Series(myFrames.date)
     S_debit = pd.Series(myFrames.debit)
     S_credit = pd.Series(myFrames.credit)
     dataframe = pd.concat([S_date,S_debit,S_credit],axis=1)     #Dataframe
     dataframe.columns = ['Date','Debit','Credit']
     # dataframe.set_index('Date',inplace=True,drop=True)
-    dataframe.plot(x="Date", y=["Debit", "Credit"])
+    dataframe.plot(x="Date", y=["Debit", "Credit"],kind='bar')
     # S_credit.plot(grid=True)
     plt.show()
     print(dataframe)
