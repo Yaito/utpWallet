@@ -1,16 +1,19 @@
-# -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'datashow.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from app import showInfo, get_acc
+from signin import sign_in
 
-class Ui_MainWindow(object):
+class ShowData(QtWidgets.QWidget):
+    def __init__(self, parent):
+        super().__init__()
+        self.setupUi()
+        self.parent = parent
+
+    def goback(self):
+        self.close()
+        self.parent.show()
 
     def accessinf(self):
         id= self.txt_ID.toPlainText()
@@ -32,25 +35,15 @@ class Ui_MainWindow(object):
             infoBox.setStandardButtons(QMessageBox.Ok)
             infoBox.setEscapeButton(QMessageBox.Close)
             infoBox.exec_()
-            print ("no existe")
-
-            # msg = QtGui.QMessageBox()
-            # msg.setIcon(QtGui.QMessageBox.Warning)
-            # msg.setWindowTitle("MessageBox demo")
-            # msg.setText("This is a message box")
-            # msg.setInformativeText("This is additional information")
-            # msg.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-            # msg.buttonClicked.connect(msg.close())
-            # msg.exec_()
         return 0
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(502, 486)
+    def setupUi(self):
+        self.setObjectName("self")
+        self.resize(502, 486)
         font = QtGui.QFont()
         font.setPointSize(10)
-        MainWindow.setFont(font)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.setFont(font)
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.txt_ID = QtWidgets.QTextEdit(self.centralwidget)
         self.txt_ID.setGeometry(QtCore.QRect(30, 80, 291, 31))
@@ -110,6 +103,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.btn_Back.setFont(font)
         self.btn_Back.setObjectName("btn_Back")
+        self.btn_Back.clicked.connect(self.goback)
         self.line = QtWidgets.QFrame(self.centralwidget)
         self.line.setGeometry(QtCore.QRect(0, 120, 501, 20))
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -121,33 +115,17 @@ class Ui_MainWindow(object):
         font.setPointSize(21)
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.setWindowTitle("Student Info")
+        self.label.setText("Student ID")
+        self.btn_Search.setText("Search")
+        self.label_2.setText("Nombre")
+        self.label_3.setText("Apellido")
+        self.label_4.setText("Facultad")
+        self.label_5.setText("Carrera")
+        self.btn_Back.setText("Back")
+        self.label_6.setText("Student Info")
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Student Info"))
-        self.label.setText(_translate("MainWindow", "Student ID"))
-        self.btn_Search.setText(_translate("MainWindow", "Search"))
-        self.label_2.setText(_translate("MainWindow", "Nombre"))
-        self.label_3.setText(_translate("MainWindow", "Apellido"))
-        self.label_4.setText(_translate("MainWindow", "Facultad"))
-        self.label_5.setText(_translate("MainWindow", "Carrera"))
-        self.btn_Back.setText(_translate("MainWindow", "Back"))
-        self.label_6.setText(_translate("MainWindow", "Student Info"))
+        self.show()
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
 

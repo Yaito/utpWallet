@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'delete.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
@@ -12,7 +5,16 @@ import sys
 from app import del_user,usr_validation
 
 
-class Ui_MainWindow(object):
+class Eliminate(QtWidgets.QWidget):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.setupUi()
+        self.parent = parent
+
+    def goback(self):
+        self.close()
+        self.parent.show()
 
     def dele(self):
         userid=self.txt_UserID.toPlainText()
@@ -42,10 +44,10 @@ class Ui_MainWindow(object):
 
 
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(345, 251)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+    def setupUi(self):
+        self.setObjectName("Delete")
+        self.resize(345, 251)
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(90, 10, 181, 51))
@@ -75,29 +77,17 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.btn_Back.setFont(font)
         self.btn_Back.setObjectName("btn_Back")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.btn_Back.clicked.connect(self.goback)
+        #self.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        #self.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.setWindowTitle("Delete User")
+        self.label.setText("Delete User")
+        self.btn_Delete.setText("Delete")
+        self.label_2.setText("User ID")
+        self.btn_Back.setText("Back")
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Delete User"))
-        self.btn_Delete.setText(_translate("MainWindow", "Delete"))
-        self.label_2.setText(_translate("MainWindow", "User ID"))
-        self.btn_Back.setText(_translate("MainWindow", "Back"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.show()
 
