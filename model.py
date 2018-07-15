@@ -1,4 +1,5 @@
 class Card(object):
+    '''Object model dedicated to hold the personal information of a utpWallet Card'''
     def __init__(self,acc_id,fname,lname,per_id,faculty,career,balance):
         self.account_ID = acc_id
         self.first_name = fname
@@ -9,6 +10,7 @@ class Card(object):
         self.current_balance = balance
 
 class User(object):
+    '''Object model dedicated to hold the administrative account information for a admin user'''
     user_type = ""
 
     def __init__(self,usr,pword):

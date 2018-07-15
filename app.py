@@ -1,6 +1,4 @@
 import model
-import mysql.connector
-from mysql.connector import errorcode
 from dbconnect import Database as MyDatabase
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -28,6 +26,7 @@ test_balance = 0.00       # TESTING initial balance
 
 # Account Validation
 def acc_validation(card_ID):
+    '''Function to validate if a utpwallet Card account exist in the database'''
     cursor = cnn.cursor()
     query = ('''SELECT acc_id FROM usr_acc WHERE acc_id = %s''')
     cursor.execute(query, (card_ID,))
@@ -38,6 +37,7 @@ def acc_validation(card_ID):
         return False
 # Operative User Validation
 def usr_validation(card_ID):
+    '''Function to validate if a utpwallet admin user exist in the database'''
     cursor = cnn.cursor()
     query = ('''SELECT user_ID FROM user WHERE user_ID = %s''')
     cursor.execute(query, (card_ID,))
@@ -49,6 +49,7 @@ def usr_validation(card_ID):
 
 # Account Enough Balance Validation
 def balance_check(acc_owner, d_amount):
+    '''Function to validate if a utpwallet Card account have enough balance to do a payment'''
     cursor = cnn.cursor()
     query = ('''SELECT acc_balance FROM usr_acc WHERE acc_id = %s''')
     cursor.execute(query, (acc_owner.account_ID,))
@@ -61,6 +62,7 @@ def balance_check(acc_owner, d_amount):
 
 # Get account information for transaction
 def get_acc(card_id):
+    '''Primary Function to get the rest of the information of a account from just an CARD_ID'''
     if (acc_validation(card_id)) == True:
         cursor = cnn.cursor()
         query = ('''SELECT acc_id,first_name,last_name,personal_id,acc_fac,b.career,acc_balance 
@@ -79,6 +81,7 @@ def get_acc(card_id):
 
 # Operative User Authentification (Background Process)
 def authenticate(log_account):
+    '''Background function to validate if a admin user exists and what permission it have'''
     cursor = cnn.cursor()
     query = ('''SELECT username FROM user WHERE username = %s''')
     cursor.execute(query, (log_account.username,))
@@ -105,6 +108,7 @@ def authenticate(log_account):
 
 # Operative User Sign In
 def sign_in(input_user, input_pass):
+    '''Function to Request Sign to the APP, features presented will depend on your permisions'''
     operator = model.User(input_user, input_pass)
     current_user = authenticate(operator)
 
@@ -113,6 +117,7 @@ def sign_in(input_user, input_pass):
 
 # Adding operative user
 def new_user(n_username,n_password,type):
+    '''Function to add a new admin user to the database'''
     cursor = cnn.cursor()
     query = ('''SELECT * FROM user WHERE username = %s''')
     cursor.execute(query, (n_username,))
@@ -132,6 +137,7 @@ def new_user(n_username,n_password,type):
         
 # Deleting operative user
 def del_user(ex_usr_id):
+    '''Function to delete existing admin user in the database'''
     if (usr_validation(ex_usr_id)) == True:
         cursor = cnn.cursor()
         query = ('''DELETE FROM user WHERE user_id = %s''')
@@ -145,6 +151,7 @@ def del_user(ex_usr_id):
 
 # Adding Card Accounts
 def new_card(n_fname,n_lname,n_pid,n_acc_fac,n_acc_career,n_acc_balance):
+    '''Function to add new utpWallet Card accounts to the database'''
     cursor = cnn.cursor()
     query = ('''SELECT * FROM usr_acc WHERE personal_id = %s''')
     cursor.execute(query, (n_pid,))
@@ -167,6 +174,7 @@ def new_card(n_fname,n_lname,n_pid,n_acc_fac,n_acc_career,n_acc_balance):
         
 # Deleting Card Accounts
 def del_card(ex_card_id):
+    '''Function to delete existing utpWallet Card accounts to the database'''    
     if (acc_validation(ex_card_id)) == True:
         cursor = cnn.cursor()
         query = ('''DELETE FROM usr_acc WHERE acc_ID = %s''')
@@ -181,6 +189,7 @@ def del_card(ex_card_id):
 
 # Discount on account balance function
 def Payment(account, debit):
+    '''Function to add debit for an existing utpWallet Card account balance'''
     if(balance_check(account, debit)) == True:
         cursor = cnn.cursor()
         query1 = ('''INSERT INTO trx VALUES(NULL,%s,1,CURDATE(),%s,0.00)''')
@@ -199,6 +208,7 @@ def Payment(account, debit):
 
 # Topup on account balance function
 def Topup(account, credit):
+    '''Function to add credit for an existing utpWallet Card account balance'''
     if(account != False):
         cursor = cnn.cursor()
         query1 = ('''INSERT INTO trx VALUES(NULL,%s,2,CURDATE(),0.00,%s)''')
@@ -217,6 +227,7 @@ def Topup(account, credit):
 
 # Identification Extraction
 def showInfo(account):
+    '''Function to show basic identification information to the GUI'''
     if(account != False):
         name = account.first_name
         fam_name = account.last_name
@@ -228,6 +239,7 @@ def showInfo(account):
         return False
 
 def dataAnalysis():
+    '''Function to present a graphic analysis for trasanction VS days'''
     cursor = cnn.cursor()
     myFrames = pd.read_sql_query('''SELECT date,sum(debit) as debit,sum(credit) as credit FROM trx GROUP BY date''', cnn)
     S_date = pd.Series(myFrames.date)
@@ -251,4 +263,4 @@ def dataAnalysis():
 # del_user(test_usr_id)
 # new_card(test_fname,test_lname,test_pid,test_fac,test_career,test_balance)
 # del_card(test_card_id)
-dataAnalysis()
+# dataAnalysis()
