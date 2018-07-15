@@ -2,6 +2,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from delete import Eliminate
 from new import NewUser
+from app import dataAnalysis
 
 class Manejo(QtWidgets.QWidget):
 
@@ -11,6 +12,7 @@ class Manejo(QtWidgets.QWidget):
         self.parent = parent
 
     def graphic(self):
+        dataAnalysis()
         pass
         
     def gocreate(self):
@@ -63,7 +65,7 @@ class Manejo(QtWidgets.QWidget):
         font.setPointSize(10)
         self.Showgraph.setFont(font)
         self.Showgraph.setObjectName("Showgraph")
-        self.btn_Delete_2.clicked.connect(self.graphic)
+        self.Showgraph.clicked.connect(self.graphic)
         #self.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")

@@ -248,10 +248,10 @@ def dataAnalysis():
     dataframe = pd.concat([S_date,S_debit,S_credit],axis=1)     #Dataframe
     dataframe.columns = ['Date','Debit','Credit']
     # dataframe.set_index('Date',inplace=True,drop=True)
+    print(dataframe)
     dataframe.plot(x="Date", y=["Debit", "Credit"],kind='bar')
     # S_credit.plot(grid=True)
     plt.show()
-    print(dataframe)
 
 
 
