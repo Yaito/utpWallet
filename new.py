@@ -1,17 +1,21 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'new.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import sys
 from app import new_user
-class Ui_MainWindow(object):
 
+
+class NewUser(QtWidgets.QWidget):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.setupUi()
+        self.parent = parent
+
+    def goback(self):
+
+        self.close()
+        self.parent.show()
 
     def nuevo(self):
         user=self.txt_User.toPlainText()
@@ -51,10 +55,10 @@ class Ui_MainWindow(object):
         
 
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(366, 367)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+    def setupUi(self):
+        self.setObjectName("New")
+        self.resize(366, 367)
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.txt_User = QtWidgets.QTextEdit(self.centralwidget)
         self.txt_User.setGeometry(QtCore.QRect(10, 100, 311, 31))
@@ -101,41 +105,27 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.btn_Back.setFont(font)
         self.btn_Back.setObjectName("btn_Back")
+        self.btn_Back.clicked.connect(self.goback)
         self.btn_Submit = QtWidgets.QPushButton(self.centralwidget)
         self.btn_Submit.setGeometry(QtCore.QRect(50, 300, 91, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.btn_Submit.setFont(font)
         self.btn_Submit.setObjectName("btn_Submit")
-        self.btn_Submit.clicked.connect(self.nuevo)
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.btn_Submit.clicked.connect(self.nuevo)     
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "Username"))
-        self.label.setText(_translate("MainWindow", "New User"))
-        self.label_3.setText(_translate("MainWindow", "Password"))
-        self.label_4.setText(_translate("MainWindow", "Type"))
-        self.cbx_Type.setItemText(0, _translate("MainWindow", "Admin"))
-        self.cbx_Type.setItemText(1, _translate("MainWindow", "Cashier"))
-        self.cbx_Type.setItemText(2, _translate("MainWindow", "Security"))
-        self.btn_Back.setText(_translate("MainWindow", "Back"))
-        self.btn_Submit.setText(_translate("MainWindow", "Submit"))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.setWindowTitle("New User")
+        self.label_2.setText("Username")
+        self.label.setText("New User")
+        self.label_3.setText("Password")
+        self.label_4.setText("Type")
+        self.cbx_Type.setItemText(0,"Admin")
+        self.cbx_Type.setItemText(1, "Cashier")
+        self.cbx_Type.setItemText(2, "Security")
+        self.btn_Back.setText("Back")
+        self.btn_Submit.setText("Submit")
+        self.show()
 

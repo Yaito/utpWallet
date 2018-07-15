@@ -1,19 +1,22 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'transaction.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from app import Payment, balance_check
-from app import Topup, get_acc
+from app import Topup
 from PyQt5.QtWidgets import QMessageBox
 from app import showInfo, get_acc
 import sys
 
-class Ui_MainWindow(object):
+
+class MoneyWindow(QtWidgets.QWidget):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.setupUi()
+        self.parent = parent
+
+    def goback(self):
+        self.close()
+        self.parent.show()
 
     def tran(self):
         if (self.cbx_Type.currentIndex()==0):
@@ -76,10 +79,10 @@ class Ui_MainWindow(object):
             
 
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(364, 295)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+    def setupUi(self):
+        self.setObjectName("transaction")
+        self.resize(364, 295)
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(110, 0, 151, 61))
@@ -116,6 +119,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.btn_Exit.setFont(font)
         self.btn_Exit.setObjectName("btn_Exit")
+        self.btn_Exit.clicked.connect(self.goback)
         self.btn_Ok = QtWidgets.QPushButton(self.centralwidget)
         self.btn_Ok.setGeometry(QtCore.QRect(70, 230, 75, 31))
         font = QtGui.QFont()
@@ -132,33 +136,16 @@ class Ui_MainWindow(object):
         self.txt_ID_2 = QtWidgets.QTextEdit(self.centralwidget)
         self.txt_ID_2.setGeometry(QtCore.QRect(140, 100, 201, 31))
         self.txt_ID_2.setObjectName("txt_ID_2")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Transaction"))
-        self.label.setText(_translate("MainWindow", "Transaction"))
-        self.label_3.setText(_translate("MainWindow", "Type"))
-        self.cbx_Type.setItemText(0, _translate("MainWindow", "Top-up"))
-        self.cbx_Type.setItemText(1, _translate("MainWindow", "Payment"))
-        self.label_4.setText(_translate("MainWindow", "Student ID"))
-        self.btn_Exit.setText(_translate("MainWindow", "Exit"))
-        self.btn_Ok.setText(_translate("MainWindow", "OK"))
-        self.label_5.setText(_translate("MainWindow", "Amount"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-
+        
+        self.setWindowTitle("Transaction")
+        self.label.setText("Transaction")
+        self.label_3.setText("Type")
+        self.cbx_Type.setItemText(0, "Top-up")
+        self.cbx_Type.setItemText(1, "Payment")
+        self.label_4.setText("Student ID")
+        self.btn_Exit.setText("Exit")
+        self.btn_Ok.setText("OK")
+        self.label_5.setText("Amount")
+        self.show()

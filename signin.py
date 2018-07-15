@@ -1,47 +1,40 @@
-# -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'signin.ui'
-#
-# Created by: PyQt5 UI code generator 5.9.2
-#
-# WARNING! All changes made in this file will be lost!
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QLineEdit
+from PyQt5.QtWidgets import QMessageBox, QLineEdit, QMainWindow
 from app import sign_in
-from transaction import Ui_MainWindow as bargain
-from datashow import Ui_MainWindow as show_info
-from management import Ui_MainWindow as admin
-class Ui_MainWindow(object):
+from management import Manejo
+from datashow import ShowData
+from transaction import MoneyWindow
 
-    def signin(self):
-        users= self.txt_User.toPlainText()
-        passwords= self.lineEdit_pass.text()
-        cur_user= sign_in(users, passwords)
-        if cur_user !=False:
-            user_type= cur_user.type
+class Sign_in(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi()
+
+    def usignin(self):
+        users = self.txt_User.toPlainText()
+        passwords = self.lineEdit_pass.text()
+        cur_user = sign_in(users, passwords)
+        if cur_user != False:
+            user_type = cur_user.type
             if(cur_user.type == 1):
-                self.window= QtWidgets.QMainWindow()
-                self.ui= admin()
-                self.ui.setupUi(self.window)
-                self.window.show()
-                MainWindow.close()
+
+                self.manageView = Manejo(self)
+                self.hide()
+
                 print("SYSTEM INFO: Successfully Logged in")
                 print("Type 1 - Admin")
             elif(cur_user.type == 2):
-                self.window= QtWidgets.QMainWindow()
-                self.ui= bargain()
-                self.ui.setupUi(self.window)
-                self.window.show()
-                MainWindow.close()
+                self.show_data = MoneyWindow(self)
+                self.hide()
+                
                 print("SYSTEM INFO: Successfully Logged in")
                 print("Type 2 - Cashier")
             elif(cur_user.type == 3):
-                self.window= QtWidgets.QMainWindow()
-                self.ui= show_info()
-                self.ui.setupUi(self.window)
-                self.window.show()
-                MainWindow.close()
+                self.show_data = ShowData(self)
+                self.hide()
                 print("SYSTEM INFO: Successfully Logged in")
                 print("Type 3 - Security")
         else:
@@ -50,16 +43,17 @@ class Ui_MainWindow(object):
             infoBox.setText("Error")
             infoBox.setInformativeText("Log-in Error")
             infoBox.setWindowTitle("ERROR")
-            infoBox.setDetailedText("Username or Password doesnt't match or doesn't Exist")
+            infoBox.setDetailedText(
+                "Username or Password doesnt't match or doesn't Exist")
             infoBox.setStandardButtons(QMessageBox.Ok)
             infoBox.setEscapeButton(QMessageBox.Close)
             infoBox.exec_()
             pass
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(414, 395)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+    def setupUi(self):
+        self.setObjectName("Signin")
+        self.resize(414, 395)
+        self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(30, 40, 141, 41))
@@ -91,35 +85,19 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.btn_Continue.setFont(font)
         self.btn_Continue.setObjectName("btn_Continue")
-        self.btn_Continue.clicked.connect(self.signin)
+        self.btn_Continue.clicked.connect(self.usignin)
         self.lineEdit_pass = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_pass.setGeometry(QtCore.QRect(30, 210, 271, 31))
         self.lineEdit_pass.setEchoMode(QtWidgets.QLineEdit.Password)
         self.lineEdit_pass.setClearButtonEnabled(False)
         self.lineEdit_pass.setObjectName("lineEdit_pass")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Sign In"))
-        self.label.setText(_translate("MainWindow", "Sign In"))
-        self.label_2.setText(_translate("MainWindow", "Username"))
-        self.label_3.setText(_translate("MainWindow", "Password"))
-        self.btn_Continue.setText(_translate("MainWindow", "Continue"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-
+        self.setStatusBar(self.statusbar)
+        self.setWindowTitle("Sign In")
+        self.label.setText("Sign In")
+        self.label_2.setText("Username")
+        self.label_3.setText("Password")
+        self.btn_Continue.setText("Continue")
+        self.show()
