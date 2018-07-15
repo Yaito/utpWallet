@@ -1,29 +1,17 @@
 import model
 import mysql.connector
 from mysql.connector import errorcode
+from dbconnect import Database as MyDatabase
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Iniciate Database connection
-try:
-    cnn = mysql.connector.connect(
-        user='root',
-        password='5460luis',
-        host='localhost',
-        database='utpWallet_Prod'
-    )
-    # If connection success print message
-    print("\nSYSTEM MESSAGE : MYSQL DATABASE CONNECTED\n")
-except mysql.connector.Error as e:
-    if e.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("Something is wrong with username or Password")
-    elif e.errno == errorcode.ER_BAD_DB_ERROR:
-        print("DataBase does not exist")
-    else:
-        print(e)
+# Calling the database connection
+cnn = MyDatabase.connect_dbs()
 
 # TEST GUI Request Variables
 test_id = 1  # TESTING VARIABLE: DECIDE WHO PASS THE CARD
-topup_credit = 1235.75  # TESTING VARIABLE: CREDIT
-payment_debit = 1000.00  # TESTING VARIABLE: DEBIT
+topup_credit = 666.25  # TESTING VARIABLE: CREDIT
+payment_debit = 777.00  # TESTING VARIABLE: DEBIT
 
 test_usr_id = 10
 test_usr = "chombita123"  # TESTING OPERATIVE USER
@@ -195,7 +183,7 @@ def del_card(ex_card_id):
 def Payment(account, debit):
     if(balance_check(account, debit)) == True:
         cursor = cnn.cursor()
-        query1 = ('''INSERT INTO trx VALUES(NULL,%s,1,NOW(),%s,0.00)''')
+        query1 = ('''INSERT INTO trx VALUES(NULL,%s,1,CURDATE(),%s,0.00)''')
         cursor.execute(query1, (account.account_ID, debit,))
         cnn.commit()
 
@@ -213,7 +201,7 @@ def Payment(account, debit):
 def Topup(account, credit):
     if(account != False):
         cursor = cnn.cursor()
-        query1 = ('''INSERT INTO trx VALUES(NULL,%s,2,NOW(),0.00,%s)''')
+        query1 = ('''INSERT INTO trx VALUES(NULL,%s,2,CURDATE(),0.00,%s)''')
         cursor.execute(query1, (account.account_ID, credit,))
         cnn.commit()
 
@@ -239,6 +227,22 @@ def showInfo(account):
         # return print("Indentification Error: Account not in database")
         return False
 
+def dataAnalysis():
+    cursor = cnn.cursor()
+    myFrames = pd.read_sql_query('''SELECT * FROM trx''', cnn)
+    S_date = pd.Series(myFrames.date)
+    S_debit = pd.Series(myFrames.debit)
+    S_credit = pd.Series(myFrames.credit)
+    dataframe = pd.concat([S_date,S_debit,S_credit],axis=1)     #Dataframe
+    dataframe.columns = ['Date','Debit','Credit']
+    # dataframe.set_index('Date',inplace=True,drop=True)
+    dataframe.plot(x="Date", y=["Debit", "Credit"])
+    # S_credit.plot(grid=True)
+    plt.show()
+    print(dataframe)
+
+
+
 # Topup(get_acc(test_id),topup_credit)
 # Payment(get_acc(test_id),payment_debit)
 # showInfo(get_acc(test_id))
@@ -247,3 +251,4 @@ def showInfo(account):
 # del_user(test_usr_id)
 # new_card(test_fname,test_lname,test_pid,test_fac,test_career,test_balance)
 # del_card(test_card_id)
+dataAnalysis()
