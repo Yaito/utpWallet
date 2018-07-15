@@ -6,7 +6,7 @@ from mysql.connector import errorcode
 try:
     cnn = mysql.connector.connect(
         user='root',
-        password='normale32',
+        password='5460luis',
         host='localhost',
         database='utpWallet_Prod'
     )
